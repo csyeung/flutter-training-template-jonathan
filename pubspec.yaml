@@ -1,6 +1,6 @@
 name: flutter_training
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -14,7 +14,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  yumemi_lints: ^2.2.0
+  pedantic_mono: ^1.21.1
 
 flutter:
   uses-material-design: true
