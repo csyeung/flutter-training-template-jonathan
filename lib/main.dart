@@ -1,13 +1,30 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:yumemi_weather/yumemi_weather.dart';
 
 void main() {
   runApp(const MainApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MainApp extends StatefulWidget {
+  const MainApp({
+    super.key,
+  });
+
+  @override
+  MainAppState createState() => MainAppState();
+}
+
+class MainAppState extends State<MainApp> {
+  String condition = '';
+
+  void getWeather() {
+    final yumemi = YumemiWeather();
+
+    setState(() {
+      condition = yumemi.fetchSimpleWeather();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +48,15 @@ class MainApp extends StatelessWidget {
                         maxWidth: width,
                         maxHeight: width,
                       ),
-                      child: const Placeholder(
-                        color: Colors.black12,
-                      ),
+                      child: (condition == '')
+                          ? const Placeholder(
+                              color: Colors.black12,
+                            )
+                          : SvgPicture.asset(
+                              width: width,
+                              height: width,
+                              'assets/$condition.svg',
+                            ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -81,11 +104,14 @@ class MainApp extends StatelessWidget {
                           ),
                         ),
                         FittedBox(
-                          child: Text(
-                            'Reload',
-                            textAlign: TextAlign.center,
-                            style: themeData.labelLarge!
-                                .copyWith(color: Colors.blue),
+                          child: GestureDetector(
+                            onTap: getWeather,
+                            child: Text(
+                              'Reload',
+                              textAlign: TextAlign.center,
+                              style: themeData.labelLarge!
+                                  .copyWith(color: Colors.blue),
+                            ),
                           ),
                         ),
                       ],
