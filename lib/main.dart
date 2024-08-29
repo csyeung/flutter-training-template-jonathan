@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'weather.dart';
+import 'navigate.dart';
 
 void main() {
   runApp(const MaterialApp(home: MainApp()));
@@ -14,25 +15,7 @@ class MainApp extends StatefulWidget {
   MainAppState createState() => MainAppState();
 }
 
-class MainAppState extends State<MainApp> {
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(milliseconds: 500), () async {
-        if (mounted) {
-          await Navigator.push(
-            context,
-            MaterialPageRoute<WeatherScreen>(
-              builder: (context) => const WeatherScreen(),
-            ),
-          );
-        }
-      });
-    });
-  }
-
+class MainAppState extends State<MainApp> with NavigateWeather<MainApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

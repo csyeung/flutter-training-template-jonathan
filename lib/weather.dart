@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:yumemi_weather/yumemi_weather.dart';
+import 'fetch_weather.dart';
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({
@@ -11,14 +11,12 @@ class WeatherScreen extends StatefulWidget {
   WeatherScreenState createState() => WeatherScreenState();
 }
 
-class WeatherScreenState extends State<WeatherScreen> {
+class WeatherScreenState extends State<WeatherScreen> with FetchWeather {
   String condition = '';
 
   void getWeather() {
-    final yumemi = YumemiWeather();
-
     setState(() {
-      condition = yumemi.fetchSimpleWeather();
+      condition = fetchWeather();
     });
   }
 
