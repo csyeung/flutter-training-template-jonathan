@@ -8,7 +8,13 @@ mixin FetchWeather {
     late String condition;
 
     try {
-      condition = weather.fetchThrowsWeather('tokyo');
+      const jsonString = '''
+{
+    "area": "tokyo",
+    "date": "2020-04-01T12:00:00+09:00"
+}''';
+
+      condition = weather.fetchWeather(jsonString);
     } on YumemiWeatherError catch (e) {
       condition = '';
       showDialog<void>(
