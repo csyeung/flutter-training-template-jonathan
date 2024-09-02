@@ -16,7 +16,7 @@ class WeatherScreenState extends State<WeatherScreen> with FetchWeather {
 
   void getWeather() {
     setState(() {
-      condition = fetchWeather();
+      condition = fetchWeather(context);
     });
   }
 
