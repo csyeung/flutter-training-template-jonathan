@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'data/data_weather.dart';
 import 'fetch_weather.dart';
 
 class WeatherScreen extends StatefulWidget {
@@ -19,15 +20,15 @@ class WeatherScreenState extends State<WeatherScreen> with FetchWeather {
 
   void getWeather() {
     setState(() {
-      final baseData = fetchWeather(context);
-      final weatherData = jsonDecode(baseData);
+      final weatherData = fetchWeather(context);
 
-      // ignore: avoid_dynamic_calls
-      condition = weatherData['weather_condition'] as String;
-      // ignore: avoid_dynamic_calls
-      minWeather = weatherData['min_temperature'] as int;
-      // ignore: avoid_dynamic_calls
-      maxWeather = weatherData['max_temperature'] as int;
+      if (weatherData == null) {
+        return;
+      }
+
+      condition = weatherData.weatherCondition;
+      minWeather = weatherData.minTemperature;
+      maxWeather = weatherData.maxTemperature;
     });
   }
 
