@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'navigate.dart';
 
 void main() {
-  runApp(const MaterialApp(home: MainApp()));
+  runApp(
+    const ProviderScope(
+      child: MaterialApp(
+        home: MainApp(),
+      ),
+    ),
+  );
 }
 
 class MainApp extends StatefulWidget {

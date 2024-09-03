@@ -1,39 +1,17 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'data/data_weather.dart';
-import 'fetch_weather.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'notifier/weather_notifier.dart';
 
-class WeatherScreen extends StatefulWidget {
+class WeatherScreen extends HookConsumerWidget {
   const WeatherScreen({
     super.key,
   });
 
   @override
-  WeatherScreenState createState() => WeatherScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final weather = ref.watch(fetchWeatherProvider);
 
-class WeatherScreenState extends State<WeatherScreen> with FetchWeather {
-  String condition = '';
-  int? minWeather;
-  int? maxWeather;
-
-  void getWeather() {
-    setState(() {
-      final weatherData = fetchWeather(context);
-
-      if (weatherData == null) {
-        return;
-      }
-
-      condition = weatherData.weatherCondition;
-      minWeather = weatherData.minTemperature;
-      maxWeather = weatherData.maxTemperature;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: LayoutBuilder(
@@ -53,14 +31,14 @@ class WeatherScreenState extends State<WeatherScreen> with FetchWeather {
                       maxWidth: width,
                       maxHeight: width,
                     ),
-                    child: (condition == '')
+                    child: (weather == null)
                         ? const Placeholder(
                             color: Colors.black12,
                           )
                         : SvgPicture.asset(
                             width: width,
                             height: width,
-                            'assets/$condition.svg',
+                            'assets/${weather.weatherCondition}.svg',
                           ),
                   ),
                   Row(
@@ -72,7 +50,9 @@ class WeatherScreenState extends State<WeatherScreen> with FetchWeather {
                         ),
                         child: FittedBox(
                           child: Text(
-                            (minWeather == null) ? '** ℃' : '$minWeather ℃',
+                            (weather == null)
+                                ? '** ℃'
+                                : '${weather.minTemperature} ℃',
                             textAlign: TextAlign.center,
                             style: themeData.labelLarge!
                                 .copyWith(color: Colors.blue),
@@ -85,7 +65,9 @@ class WeatherScreenState extends State<WeatherScreen> with FetchWeather {
                         ),
                         child: FittedBox(
                           child: Text(
-                            (maxWeather == null) ? '** ℃' : '$maxWeather ℃',
+                            (weather == null)
+                                ? '** ℃'
+                                : '${weather.maxTemperature} ℃',
                             textAlign: TextAlign.center,
                             style: themeData.labelLarge!
                                 .copyWith(color: Colors.red),
@@ -115,7 +97,11 @@ class WeatherScreenState extends State<WeatherScreen> with FetchWeather {
                       ),
                       FittedBox(
                         child: GestureDetector(
-                          onTap: getWeather,
+                          onTap: () {
+                            ref
+                                .read(fetchWeatherProvider.notifier)
+                                .fetchWeather(context);
+                          },
                           child: Text(
                             'Reload',
                             textAlign: TextAlign.center,
