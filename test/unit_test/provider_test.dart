@@ -4,6 +4,7 @@ import 'package:flutter_training/data/data_weather.dart';
 import 'package:flutter_training/notifier/weather_notifier.dart';
 
 import '../mock/mock_classes.dart';
+import '../mock/mock_data.dart';
 
 ProviderContainer _createContainer(bool hasError) {
   final container = ProviderContainer(
@@ -11,6 +12,7 @@ ProviderContainer _createContainer(bool hasError) {
       fetchWeatherProvider.overrideWith(
         (ref) => MockWeatherNotifier(
           hasError: false,
+          resultJson: resultJson,
         ),
       ),
     ],
