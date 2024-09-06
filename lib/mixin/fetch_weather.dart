@@ -23,7 +23,7 @@ mixin FetchWeather {
       showDialog<void>(
         context: context,
         builder: (_) {
-          return SimpleAlertDialog(message: e.name);
+          return SimpleAlertDialog(message: e.name, callback: () {});
         },
       );
 

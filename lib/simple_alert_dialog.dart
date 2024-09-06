@@ -4,9 +4,11 @@ class SimpleAlertDialog extends StatelessWidget {
   const SimpleAlertDialog({
     super.key,
     required this.message,
+    required this.callback,
   });
 
   final String message;
+  final VoidCallback callback;
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +18,7 @@ class SimpleAlertDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {
+            callback();
             Navigator.pop(context);
           },
           child: const Text('OK'),

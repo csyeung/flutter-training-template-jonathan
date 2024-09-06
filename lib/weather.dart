@@ -12,129 +12,128 @@ class WeatherScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final weather = ref.watch(weatherProvider);
-    final condition = ref.watch(weatherConditionProvider);
-    final minTemperature = ref.watch(minTemperatureProvider);
-    final maxTemperature = ref.watch(maxTemperatureProvider);
 
-    return RefreshIndicator(
-      onRefresh: () =>
-          ref.refresh(weatherProvider as Refreshable<Future<void>>),
-      child: Scaffold(
-        body: Center(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final width = constraints.maxWidth * 0.5;
-              final themeData = Theme.of(context).textTheme;
+    return Scaffold(
+      body: Center(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.maxWidth * 0.5;
+            final themeData = Theme.of(context).textTheme;
 
-              return Container(
-                constraints: BoxConstraints(
-                  maxWidth: width,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      child: weather.when(
-                        data: (data) {
-                          return null;
-                        },
-                        error: (e, _) {
-                          return const SimpleAlertDialog(
-                            message: 'Failed to fetch weather data.',
-                          );
-                        },
-                        loading: () => const CircularProgressIndicator(),
+            return Container(
+              constraints: BoxConstraints(
+                maxWidth: width,
+              ),
+              child: weather.when(
+                data: (data) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        constraints: BoxConstraints(
+                          maxWidth: width,
+                          maxHeight: width,
+                        ),
+                        child: (data != null)
+                            ? SvgPicture.asset(
+                                '${'assets/${data.weatherCondition}'}.svg',
+                                width: width,
+                                height: width,
+                              )
+                            : const Placeholder(
+                                color: Colors.black12,
+                              ),
                       ),
-                    ),
-                    Container(
-                      constraints: BoxConstraints(
-                        maxWidth: width,
-                        maxHeight: width,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                            ),
+                            child: FittedBox(
+                              child: Text(
+                                (data == null)
+                                    ? '** ℃'
+                                    : '${data.minTemperature} ℃',
+                                textAlign: TextAlign.center,
+                                style: themeData.labelLarge!
+                                    .copyWith(color: Colors.blue),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                            ),
+                            child: FittedBox(
+                              child: Text(
+                                (data == null)
+                                    ? '** ℃'
+                                    : '${data.maxTemperature} ℃',
+                                textAlign: TextAlign.center,
+                                style: themeData.labelLarge!
+                                    .copyWith(color: Colors.red),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: (condition != null)
-                          ? SvgPicture.asset(
-                              '${'assets/$condition'}.svg',
-                              width: width,
-                              height: width,
-                            )
-                          : const Placeholder(
-                              color: Colors.black12,
-                            ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 16,
-                          ),
-                          child: FittedBox(
-                            child: Text(
-                              (minTemperature == null)
-                                  ? '** ℃'
-                                  : '$minTemperature ℃',
-                              textAlign: TextAlign.center,
-                              style: themeData.labelLarge!
-                                  .copyWith(color: Colors.blue),
+                      const SizedBox(
+                        height: 80,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          FittedBox(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'Close',
+                                textAlign: TextAlign.center,
+                                style: themeData.labelLarge!
+                                    .copyWith(color: Colors.blue),
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 16,
-                          ),
-                          child: FittedBox(
-                            child: Text(
-                              (maxTemperature == null)
-                                  ? '** ℃'
-                                  : '$maxTemperature ℃',
-                              textAlign: TextAlign.center,
-                              style: themeData.labelLarge!
-                                  .copyWith(color: Colors.red),
+                          FittedBox(
+                            child: GestureDetector(
+                              onTap: () {
+                                ref.invalidate(weatherProvider);
+                              },
+                              child: Text(
+                                'Reload',
+                                textAlign: TextAlign.center,
+                                style: themeData.labelLarge!
+                                    .copyWith(color: Colors.blue),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 80,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        FittedBox(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              'Close',
-                              textAlign: TextAlign.center,
-                              style: themeData.labelLarge!
-                                  .copyWith(color: Colors.blue),
-                            ),
-                          ),
-                        ),
-                        FittedBox(
-                          child: GestureDetector(
-                            onTap: () {
-                              ref.invalidate(weatherProvider);
-                            },
-                            child: Text(
-                              'Reload',
-                              textAlign: TextAlign.center,
-                              style: themeData.labelLarge!
-                                  .copyWith(color: Colors.blue),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
+                error: (e, _) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    showDialog<void>(
+                      context: context,
+                      builder: (_) => SimpleAlertDialog(
+                        message: e.toString(),
+                        callback: () {
+                          ref.invalidate(weatherProvider);
+                        },
+                      ),
+                    );
+                  });
+                  return null;
+                },
+                loading: () => const CircularProgressIndicator(),
+              ),
+            );
+          },
         ),
       ),
     );
