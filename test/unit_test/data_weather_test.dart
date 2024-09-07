@@ -10,7 +10,7 @@ void main() {
         requestDate: '2020-04-01T12:00:00+09:00',
         weatherCondition: 'cloudy',
         minTemperature: 20,
-        maxTemperature: 20,
+        maxTemperature: 21,
       );
 
       expect(data.toJson(), resultJson);
@@ -22,7 +22,7 @@ void main() {
       expect(data.requestDate, '2020-04-01T12:00:00+09:00');
       expect(data.weatherCondition, 'cloudy');
       expect(data.minTemperature, 20);
-      expect(data.maxTemperature, 20);
+      expect(data.maxTemperature, 21);
     });
 
     test('Data Response', () {

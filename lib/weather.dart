@@ -21,14 +21,10 @@ class WeatherScreen extends HookConsumerWidget {
         child: provider.when(
           skipLoadingOnRefresh: false,
           data: (data) {
-            if (data.isRefreshing) {
-              return const SimpleLoadingView();
-            } else {
-              return _WeatherScreenBody(
-                data: data.value,
-                onTap: () => ref.refresh(weatherProvider),
-              );
-            }
+            return _WeatherScreenBody(
+              data: data.value,
+              onTap: () => ref.refresh(weatherProvider),
+            );
           },
           error: (_, __) => SimpleErrorView(
             onTap: () => ref.refresh(weatherProvider),
@@ -70,6 +66,7 @@ class _WeatherScreenBody extends ConsumerWidget {
                 ),
                 child: (data != null)
                     ? SvgPicture.asset(
+                        semanticsLabel: data!.weatherCondition,
                         '${'assets/${data!.weatherCondition}'}.svg',
                         width: width,
                         height: width,
