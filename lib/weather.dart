@@ -22,7 +22,7 @@ class WeatherScreen extends HookConsumerWidget {
           skipLoadingOnRefresh: false,
           data: (data) {
             return _WeatherScreenBody(
-              data: data.value,
+              data: data,
               onTap: () => ref.refresh(weatherProvider),
             );
           },
