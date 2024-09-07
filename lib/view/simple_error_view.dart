@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../provider/weather_provider.dart';
-
 class SimpleErrorView extends HookConsumerWidget {
   const SimpleErrorView({
     super.key,
+    required this.onTap,
   });
+
+  final void Function() onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,6 +24,7 @@ class SimpleErrorView extends HookConsumerWidget {
             ),
           ),
           GestureDetector(
+            onTap: onTap,
             child: const Text(
               'Reload',
               style: TextStyle(
@@ -30,9 +32,6 @@ class SimpleErrorView extends HookConsumerWidget {
                 fontWeight: FontWeight.normal,
               ),
             ),
-            onTap: () {
-              ref.invalidate(weatherProvider);
-            },
           ),
         ],
       ),

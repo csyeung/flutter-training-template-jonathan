@@ -14,14 +14,27 @@ class WeatherScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final provider = ref.watch(weatherProvider);
+
     return Scaffold(
       body: Center(
-        child: ref.watch(weatherProvider).when(
-              skipLoadingOnRefresh: false,
-              data: (data) => _WeatherScreenBody(data: data),
-              error: (error, _) => const SimpleErrorView(),
-              loading: () => const SimpleLoadingView(),
-            ),
+        child: provider.when(
+          skipLoadingOnRefresh: false,
+          data: (data) {
+            if (data.isRefreshing) {
+              return const SimpleLoadingView();
+            } else {
+              return _WeatherScreenBody(
+                data: data.value,
+                onTap: () => ref.refresh(weatherProvider),
+              );
+            }
+          },
+          error: (_, __) => SimpleErrorView(
+            onTap: () => ref.refresh(weatherProvider),
+          ),
+          loading: () => const SimpleLoadingView(),
+        ),
       ),
     );
   }
@@ -30,9 +43,11 @@ class WeatherScreen extends HookConsumerWidget {
 class _WeatherScreenBody extends ConsumerWidget {
   const _WeatherScreenBody({
     required this.data,
+    required this.onTap,
   });
 
   final DataWeather? data;
+  final void Function() onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -115,9 +130,7 @@ class _WeatherScreenBody extends ConsumerWidget {
                   ),
                   FittedBox(
                     child: GestureDetector(
-                      onTap: () {
-                        ref.invalidate(weatherProvider);
-                      },
+                      onTap: onTap,
                       child: Text(
                         'Reload',
                         textAlign: TextAlign.center,
