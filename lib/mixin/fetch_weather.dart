@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
 import '../data/data_weather.dart';
 import '../data/request_weather.dart';
-import '../simple_alert_dialog.dart';
+import '../view/simple_alert_dialog.dart';
 
 mixin FetchWeather {
   DataWeather? fetchWeather(BuildContext context) {

@@ -5,16 +5,16 @@ import 'package:flutter_training/data/data_weather.dart';
 import 'package:flutter_training/data/request_weather.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
 
-final weatherProvider = FutureProvider<DataWeather?>((ref) async {
+final weatherProvider = StreamProvider<DataWeather?>((ref) {
   final request =
       RequestWeather(area: 'tokyo', date: '2020-04-01T12:00:00+09:00');
 
   try {
-    final result = await Future.sync(
-      () => YumemiWeather().syncFetchWeather(request.toString()),
-    );
-    return DataWeather.fromJson(
-      jsonDecode(result) as Map<String, dynamic>,
+    final result = YumemiWeather().syncFetchWeather(request.toString());
+    return Stream.value(
+      DataWeather.fromJson(
+        jsonDecode(result) as Map<String, dynamic>,
+      ),
     );
   } on Exception catch (_) {
     throw Exception('Failed to fetch weather data.');
